@@ -4,6 +4,8 @@
 /node_modules
 /.pnp
 .pnp.*
+pnpm-lock.yaml
+package-lock.json
 .yarn/*
 !.yarn/patches
 !.yarn/plugins
@@ -39,3 +41,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# javascript package manager lock files
+*.package-lock.json
+*.pnpm-lock.yaml
