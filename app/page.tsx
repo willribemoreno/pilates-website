@@ -3,6 +3,7 @@ import Navbar from "./ui/shared/navbar/navbar";
 import Hero from "./ui/home/hero";
 import About from "./ui/home/about";
 import Footer from "./ui/home/footer";
+import Contact from "./ui/home/contact";
 
 const heroProps = {
   title: "Transforme Seu Corpo Com Pilates",
@@ -20,12 +21,12 @@ const footerProps = {
   rights: "2025 Pilates Studio. Todos os direitos reservados.",
 };
 
+// { name: "Sobre", href: "#", current: false },
 const navbarProps = {
   navigation: [
     { name: "Início", href: "#", current: true },
-    { name: "Aulas", href: "#", current: false },
-    { name: "Sobre", href: "#", current: false },
-    { name: "Contato", href: "#", current: false },
+    { name: "Aulas", href: "#about", current: false },
+    { name: "Contato", href: "#contact", current: false },
   ],
   menuItems: [
     { name: "Meu Perfil", href: "#" },
@@ -34,11 +35,16 @@ const navbarProps = {
   ],
 };
 
+const contactProps = {
+  title: "Entre em Contato",
+};
+
 const App = () => (
   <div>
     <Navbar {...navbarProps} />
     <Hero {...heroProps} />
     <About {...aboutProps} />
+    <Contact {...contactProps} />
     <Footer {...footerProps} />
   </div>
 );

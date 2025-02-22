@@ -15,8 +15,8 @@ export default function Hero(props: {
         <h1 className="text-4xl md:text-6xl font-bold">{props.title}</h1>
         <p className="mt-4 text-lg md:text-xl">{props.description}</p>
         <a
-          href="#"
-          className="mt-6 inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg"
+          href="#contact"
+          className="mt-6 inline-block bg-blue-600 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-lg"
         >
           {props.buttonText}
         </a>

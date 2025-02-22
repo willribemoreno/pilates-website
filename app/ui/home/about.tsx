@@ -25,7 +25,7 @@ const cards = [
 
 export default function About(props: { title: string; description: string }) {
   return (
-    <section className="py-20 px-8 max-w-5xl mx-auto text-center">
+    <section className="pt-20 px-8 max-w-5xl mx-auto text-center" id="about">
       <h2 className="text-3xl font-bold text-blue-600">{props.title}</h2>
       <p className="mt-4 text-gray-600">{props.description}</p>
       <div className="grid md:grid-cols-4 gap-8 mt-10">
