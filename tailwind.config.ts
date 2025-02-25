@@ -11,7 +11,23 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        primary: "#ffffff",
+        secondary: "#2563eb",
+        hover: "#1e3a8a",
+        button: {
+          primary: "#2563eb",
+          hover: "#1e40af"
+        },
+        navbar: {
+          hover: "#e0f2fe",
+        }
       },
+    },
+  },
+  variants: {
+    extend: {
+      backgroundColor: ["hover"],
+      textColor: ["hover"],
     },
   },
   plugins: [],

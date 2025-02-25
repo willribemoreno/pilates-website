@@ -37,6 +37,7 @@ const navbarProps = {
 
 const contactProps = {
   title: "Entre em Contato",
+  button: "Enviar mensagem",
 };
 
 const App = () => (
