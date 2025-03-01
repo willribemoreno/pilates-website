@@ -2,6 +2,8 @@ export default function Hero(props: {
   title: string;
   description: string;
   buttonText: string;
+  onClick: Function;
+  onClickMsg: string;
 }) {
   return (
     <section
@@ -16,6 +18,7 @@ export default function Hero(props: {
         <p className="mt-4 text-lg md:text-xl">{props.description}</p>
         <a
           href="#contact"
+          onClick={() => props.onClick(props.onClickMsg)}
           className="mt-6 inline-block bg-button-primary hover:bg-button-hover text-primary font-bold py-3 px-6 rounded-lg"
         >
           {props.buttonText}

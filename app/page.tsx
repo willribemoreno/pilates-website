@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState } from "react";
 import Navbar from "./ui/shared/navbar/navbar";
 import Hero from "./ui/home/hero";
 import About from "./ui/home/about";
@@ -9,6 +11,7 @@ const heroProps = {
   title: "Transforme Seu Corpo Com Pilates",
   description: "Fortaleça, alongue e tonifique em um ambiente acolhedor",
   buttonText: "Faça Uma Aula Experimental",
+  ContactMessage: "Olá, eu gostaria de realizar uma aula experimental...",
 };
 
 const aboutProps = {
@@ -40,14 +43,33 @@ const contactProps = {
   button: "Enviar mensagem",
 };
 
-const App = () => (
-  <div>
-    <Navbar {...navbarProps} />
-    <Hero {...heroProps} />
-    <About {...aboutProps} />
-    <Contact {...contactProps} />
-    <Footer {...footerProps} />
-  </div>
-);
+export default function App() {
+  const [textArea, setTextArea] = useState("");
 
-export default App;
+  const handleChangeTextArea = (
+    event: React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
+    setTextArea(event.target.value);
+  };
+
+  return (
+    <div>
+      <Navbar {...navbarProps} />
+      <Hero
+        buttonText={heroProps.buttonText}
+        description={heroProps.description}
+        title={heroProps.title}
+        onClick={setTextArea}
+        onClickMsg={heroProps.ContactMessage}
+      />
+      <About {...aboutProps} />
+      <Contact
+        button={contactProps.button}
+        title={contactProps.title}
+        onChange={handleChangeTextArea}
+        value={textArea}
+      />
+      <Footer {...footerProps} />
+    </div>
+  );
+}

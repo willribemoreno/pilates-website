@@ -3,11 +3,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { redirectToWhatsApp } from "@/app/lib/actions";
-import { useActionState, useState } from "react";
+import { ChangeEventHandler, useActionState, useState } from "react";
 
-export default function Contact(props: { title: string; button: string }) {
+export default function Contact(props: {
+  title: string;
+  button: string;
+  onChange: Function;
+  value: string;
+}) {
   const [state, formAction] = useActionState(redirectToWhatsApp, "");
   const [isExpanded, setIsExpanded] = useState(false);
+  const [textArea, setTextArea] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     // event.preventDefault(); // Prevent the default form submission
@@ -38,6 +44,8 @@ export default function Contact(props: { title: string; button: string }) {
             onClick={() => setIsExpanded(true)}
             rows={isExpanded ? 5 : 1}
             required
+            onChange={(event) => props.onChange(event)}
+            value={props.value}
           />
         </div>
         <div className="flex justify-center items-center w-full">
