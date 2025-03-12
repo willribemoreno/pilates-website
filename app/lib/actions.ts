@@ -1,7 +1,11 @@
+'use server';
+
 import { OWNER_INFOS } from './constants';
 import { redirect } from 'next/navigation'
+import { signIn } from '@/auth';
+import { AuthError } from 'next-auth';
 
-export function createWhatsAppLink(phoneNumber: string, message: string) {
+export async function createWhatsAppLink(phoneNumber: string, message: string) {
     const baseUrl = 'https://whatsa.me/';
     const encodedMessage = encodeURIComponent(message);
     const finalUrl = `${baseUrl}${phoneNumber}/?t=${encodedMessage}`;
@@ -10,7 +14,7 @@ export function createWhatsAppLink(phoneNumber: string, message: string) {
 
 export type State = string | null;
 
-export function createCustomWhatsAppLink(data: FormData) {
+export async function createCustomWhatsAppLink(data: FormData) {
 
     const name = data.get('name');
     const phone = data.get('phone');
@@ -23,9 +27,9 @@ export function createCustomWhatsAppLink(data: FormData) {
     return finalUrl;
 }
 
-export function redirectToWhatsApp(prevState: State, data: FormData): string | null {
+export async function redirectToWhatsApp(prevState: State, data: FormData): Promise<string | null> {
     console.log(prevState);
-    const url = createCustomWhatsAppLink(data);
+    const url = await createCustomWhatsAppLink(data);
 
     if (url) {
         window.open(url, "_blank"); // Open the URL in a new tab
@@ -34,3 +38,23 @@ export function redirectToWhatsApp(prevState: State, data: FormData): string | n
 
     return url;
 }
+
+export async function authenticate(
+    prevState: string | undefined,
+    formData: FormData,
+) {
+    try {
+        await signIn('credentials', formData);
+    } catch (error) {
+        if (error instanceof AuthError) {
+            switch (error.type) {
+                case 'CredentialsSignin':
+                    return 'Invalid credentials.';
+                default:
+                    return 'Something went wrong.';
+            }
+        }
+        throw error;
+    }
+}
+

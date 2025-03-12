@@ -2,7 +2,7 @@ export default function Hero(props: {
   title: string;
   description: string;
   buttonText: string;
-  onClick: Function;
+  onClick: (value: string) => void;
   onClickMsg: string;
 }) {
   return (

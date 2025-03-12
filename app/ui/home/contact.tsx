@@ -1,19 +1,16 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import Link from "next/link";
-import { redirectToWhatsApp } from "@/app/lib/actions";
-import { ChangeEventHandler, useActionState, useState } from "react";
+import { redirectToWhatsApp } from '@/app/lib/actions';
+import { useActionState, useState } from 'react';
 
 export default function Contact(props: {
   title: string;
   button: string;
-  onChange: Function;
+  onChange: (event: React.ChangeEvent<HTMLTextAreaElement>) => void;
   value: string;
 }) {
-  const [state, formAction] = useActionState(redirectToWhatsApp, "");
+  const [, formAction] = useActionState(redirectToWhatsApp, '');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [textArea, setTextArea] = useState("");
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     // event.preventDefault(); // Prevent the default form submission
