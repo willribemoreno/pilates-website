@@ -45,3 +45,6 @@ next-env.d.ts
 # javascript package manager lock files
 *.package-lock.json
 *.pnpm-lock.yaml
+
+# vs code
+.vscode/
