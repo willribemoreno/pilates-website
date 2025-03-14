@@ -1,43 +1,36 @@
-"use client";
+'use client';
 
-import { Input } from "@headlessui/react";
-import { Button } from "@headlessui/react";
-import Link from "next/link";
-import {
-  AtSymbolIcon,
-  KeyIcon,
-  ExclamationCircleIcon,
-} from "@heroicons/react/24/outline";
-import { useActionState } from "react";
-import { authenticate } from "@/app/lib/actions";
+import { Input } from '@headlessui/react';
+import { Button } from '@headlessui/react';
+import Link from 'next/link';
+import { AtSymbolIcon, KeyIcon, ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import { useActionState } from 'react';
+import { authenticate } from '@/app/lib/actions';
 import { useSearchParams } from 'next/navigation';
-import Navbar from "@/app/ui/shared/navbar/navbar";
-import Footer from "@/app/ui/home/footer";
+import Navbar from '@/app/ui/shared/navbar/navbar';
+import Footer from '@/app/ui/home/footer';
 
 const footerProps = {
-  rights: "2025 Pilates Studio. Todos os direitos reservados.",
+  rights: '2025 Pilates Studio. Todos os direitos reservados.',
 };
 
 const navbarProps = {
   navigation: [
-    { name: "Início", href: "/", current: true },
-    { name: "Aulas", href: "/#about", current: false },
-    { name: "Contato", href: "/#contact", current: false },
+    { name: 'Início', href: '/' },
+    { name: 'Aulas', href: '/#about' },
+    { name: 'Contato', href: '/#contact' },
   ],
   menuItems: [
-    { name: "Meu Perfil", href: "#" },
-    { name: "Configurações", href: "#" },
-    { name: "Deslogar", href: "#" },
+    { name: 'Meu Perfil', href: '#' },
+    { name: 'Configurações', href: '#' },
+    { name: 'Deslogar', href: '#' },
   ],
-}
+};
 
 export default function Login() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/manage';
-  const [errorMessage, formAction,] = useActionState(
-    authenticate,
-    undefined,
-  );
+  const [errorMessage, formAction] = useActionState(authenticate, undefined);
 
   return (
     <div className="flex flex-col h-screen">
@@ -49,10 +42,7 @@ export default function Login() {
             Por favor, insira suas credenciais para continuar...
           </p>
           <div className="w-1/5 text-left">
-            <label
-              className="mb-2 mt-5 block text-xs font-semibold text-left"
-              htmlFor="email"
-            >
+            <label className="mb-2 mt-5 block text-xs font-semibold text-left" htmlFor="email">
               E-mail
             </label>
             <div className="relative">
@@ -66,10 +56,7 @@ export default function Login() {
             </div>
           </div>
           <div className="w-1/5 text-left">
-            <label
-              className="mb-2 mt-5 block text-xs font-semibold text-left"
-              htmlFor="password"
-            >
+            <label className="mb-2 mt-5 block text-xs font-semibold text-left" htmlFor="password">
               Password
             </label>
             <div className="relative">

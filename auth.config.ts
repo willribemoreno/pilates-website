@@ -11,8 +11,6 @@ export const authConfig = {
             if (isOnManage) {
                 if (isLoggedIn) return true;
                 return false; // Redirect unauthenticated users to login page
-            } else if (isLoggedIn) {
-                return Response.redirect(new URL('/manage', nextUrl));
             }
             return true;
         },
