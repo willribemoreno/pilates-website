@@ -1,5 +1,7 @@
 'use client';
 
+import Image from 'next/image';
+import Link from 'next/link';
 import {
   Disclosure,
   DisclosureButton,
@@ -10,14 +12,14 @@ import {
   MenuItems,
 } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { type Session } from 'next-auth';
 
 export default function Navbar(props: {
   navigation: { name: string; href: string }[];
   menuItems: { name: string; href: string }[];
 }) {
-  const [session, setSession] = useState<any>(null);
+  const [session, setSession] = useState<Session>();
 
   useEffect(() => {
     async function fetchSession() {
@@ -62,7 +64,7 @@ export default function Navbar(props: {
                 <MenuButton className="relative flex rounded-full bg-blue-600 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden hover:animate-pulse">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Abrir menu do usuário</span>
-                  <img
+                  <Image
                     alt=""
                     src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
                     className="size-8 rounded-full"
