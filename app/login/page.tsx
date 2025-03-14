@@ -6,9 +6,11 @@ import Link from "next/link";
 import {
   AtSymbolIcon,
   KeyIcon,
+  ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
 import { useActionState } from "react";
 import { authenticate } from "@/app/lib/actions";
+import { useSearchParams } from 'next/navigation';
 import Navbar from "@/app/ui/shared/navbar/navbar";
 import Footer from "@/app/ui/home/footer";
 
@@ -18,9 +20,9 @@ const footerProps = {
 
 const navbarProps = {
   navigation: [
-    { name: "Início", href: "#", current: true },
-    { name: "Aulas", href: "#about", current: false },
-    { name: "Contato", href: "#contact", current: false },
+    { name: "Início", href: "/", current: true },
+    { name: "Aulas", href: "/#about", current: false },
+    { name: "Contato", href: "/#contact", current: false },
   ],
   menuItems: [
     { name: "Meu Perfil", href: "#" },
@@ -30,9 +32,15 @@ const navbarProps = {
 }
 
 export default function Login() {
-  const [, formAction,] = useActionState(
+  // const [, formAction,] = useActionState(
+  //   authenticate,
+  //   undefined
+  // );
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get('callbackUrl') || '/manage';
+  const [errorMessage, formAction, isPending] = useActionState(
     authenticate,
-    undefined
+    undefined,
   );
 
   return (
@@ -78,9 +86,18 @@ export default function Login() {
               <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
+          <div className="flex h-8 items-end w-1/5">
+            {errorMessage && (
+              <>
+                <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+                <p className="text-sm text-red-500">{errorMessage}</p>
+              </>
+            )}
+          </div>
+          <input type="hidden" name="redirectTo" value={callbackUrl} />
           <Button
             type="submit"
-            className="flex justify-center items-center w-1/5 px-7 py-3 my-3 bg-secondary text-primary font-bold rounded-full shadow-lg hover:bg-button-hover transition-all"
+            className="flex justify-center items-center w-1/5 px-7 py-3 m-3 bg-secondary text-primary font-bold rounded-full shadow-lg hover:bg-button-hover transition-all"
           >
             Log in
           </Button>
