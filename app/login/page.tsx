@@ -55,7 +55,7 @@ export default function Login() {
               <AtSymbolIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
-          <div className="w-1/5 text-left">
+          <div className="w-1/5 text-left ">
             <label className="mb-2 mt-5 block text-xs font-semibold text-left" htmlFor="password">
               Password
             </label>
@@ -69,14 +69,14 @@ export default function Login() {
               <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
             </div>
           </div>
-          <div className="flex h-8 items-end w-1/5">
-            {errorMessage && (
-              <>
-                <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
-                <p className="text-sm text-red-500">{errorMessage}</p>
-              </>
-            )}
-          </div>
+
+          {errorMessage && (
+            <div className="flex h-8 items-end w-1/5 mt-1">
+              <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+              <p className="text-sm text-red-500">{errorMessage}</p>
+            </div>
+          )}
+
           <input type="hidden" name="redirectTo" value={callbackUrl} />
           <Button
             type="submit"

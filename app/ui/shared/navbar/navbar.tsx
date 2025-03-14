@@ -1,6 +1,5 @@
 'use client';
 
-import Image from 'next/image';
 import Link from 'next/link';
 import {
   Disclosure,
@@ -26,9 +25,21 @@ export default function Navbar(props: {
       const res = await fetch('/api/auth/session');
       const data = await res.json();
       setSession(data);
+      console.log(data);
     }
     fetchSession();
   }, []);
+
+  function getNameInitials(fullName: string | null | undefined) {
+    if (fullName) {
+      const firstName = fullName.split(' ')[0];
+      const LastName = fullName.split(' ')[1];
+      const firstNameLetter = firstName[0];
+      const lastNameLetter = LastName[0];
+
+      return `${firstNameLetter}${lastNameLetter}`;
+    }
+  }
   return (
     <Disclosure as="nav" className="bg-white fixed z-10 w-full rounded-sm">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -61,14 +72,8 @@ export default function Navbar(props: {
           {session?.user && (
             <Menu as="div" className="relative ml-3">
               <div>
-                <MenuButton className="relative flex rounded-full bg-blue-600 text-sm focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800 focus:outline-hidden hover:animate-pulse">
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">Abrir menu do usuário</span>
-                  <Image
-                    alt=""
-                    src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                    className="size-8 rounded-full"
-                  />
+                <MenuButton className="p-2 relative flex rounded-full border text-sm font-semibold text-secondary hover:bg-navbar-hover hover:text-blue-900 ">
+                  {session?.user && getNameInitials(session?.user?.name)}
                 </MenuButton>
               </div>
               <MenuItems
