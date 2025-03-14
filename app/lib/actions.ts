@@ -2,7 +2,7 @@
 
 import { OWNER_INFOS } from './constants';
 import { redirect } from 'next/navigation'
-import { signIn } from '@/auth';
+import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 
 export async function createWhatsAppLink(phoneNumber: string, message: string) {

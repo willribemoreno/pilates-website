@@ -32,13 +32,9 @@ const navbarProps = {
 }
 
 export default function Login() {
-  // const [, formAction,] = useActionState(
-  //   authenticate,
-  //   undefined
-  // );
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get('callbackUrl') || '/manage';
-  const [errorMessage, formAction, isPending] = useActionState(
+  const [errorMessage, formAction,] = useActionState(
     authenticate,
     undefined,
   );
