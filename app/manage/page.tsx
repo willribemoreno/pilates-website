@@ -7,19 +7,6 @@ const footerProps = {
   rights: '2025 Pilates Studio. Todos os direitos reservados.',
 };
 
-const navbarProps = {
-  navigation: [
-    { name: 'Início', href: '/' },
-    { name: 'Aulas', href: '/#about' },
-    { name: 'Contato', href: '/#contact' },
-  ],
-  menuItems: [
-    { name: 'Meu Perfil', href: '#' },
-    { name: 'Configurações', href: '#' },
-    { name: 'Deslogar', href: '#' },
-  ],
-};
-
 export default function Manage() {
   return (
     <div className="flex flex-col h-screen">
