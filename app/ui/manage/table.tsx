@@ -296,6 +296,12 @@ export default function UserTable() {
     getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     onGlobalFilterChange: setGlobalFilter,
+    onPaginationChange: (updater) => {
+      const newPagination =
+        typeof updater === 'function' ? updater({ pageIndex, pageSize }) : updater;
+      setPageIndex(newPagination.pageIndex);
+      setPageSize(newPagination.pageSize);
+    },
   });
 
   return (
@@ -351,7 +357,7 @@ export default function UserTable() {
       <div className="flex items-center justify-between p-2 mt-4">
         <button
           className="px-3 py-1 text-white bg-blue-500 rounded-md disabled:opacity-50"
-          onClick={() => table.previousPage()}
+          onClick={() => table.setPageIndex(pageIndex - 1)}
           disabled={!table.getCanPreviousPage()}
         >
           Anterior
@@ -361,7 +367,7 @@ export default function UserTable() {
         </span>
         <button
           className="px-3 py-1 text-white bg-blue-500 rounded-md disabled:opacity-50"
-          onClick={() => table.nextPage()}
+          onClick={() => table.setPageIndex(pageIndex + 1)}
           disabled={!table.getCanNextPage()}
         >
           Próximo
