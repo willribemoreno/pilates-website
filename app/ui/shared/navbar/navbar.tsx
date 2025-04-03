@@ -13,20 +13,29 @@ import {
 import { Bars3Icon, XMarkIcon, ArrowRightIcon } from '@heroicons/react/24/outline';
 import { useEffect, useState } from 'react';
 import { type Session } from 'next-auth';
+import { useActionState } from 'react';
+import { unauthenticate } from '@/app/lib/actions';
+import { useSearchParams } from 'next/navigation';
 
 export default function Navbar(props: {
   navigation: { name: string; href: string }[];
   menuItems: { name: string; href: string }[];
 }) {
+  const [errorMessage, formAction] = useActionState(unauthenticate, undefined);
   const [session, setSession] = useState<Session>();
 
   useEffect(() => {
-    async function fetchSession() {
-      const res = await fetch('/api/auth/session');
-      const data = await res.json();
-      setSession(data);
-      console.log(data);
-    }
+    const fetchSession = async () => {
+      try {
+        const res = await fetch('/api/auth/session');
+        const data = await res.json();
+        setSession(data);
+        console.log(data);
+      } catch (error) {
+        console.error('Erro ao buscar a sessão:', error);
+      }
+    };
+
     fetchSession();
   }, []);
 
@@ -76,21 +85,32 @@ export default function Navbar(props: {
                   {session?.user && getNameInitials(session?.user?.name)}
                 </MenuButton>
               </div>
-              <MenuItems
-                transition
-                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-              >
-                {props.menuItems.map((item) => (
-                  <MenuItem key={item.name}>
-                    <a
-                      href={item.href}
-                      className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                    >
-                      {item.name}
-                    </a>
-                  </MenuItem>
-                ))}
-              </MenuItems>
+              <form action={formAction}>
+                <MenuItems
+                  transition
+                  className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 ring-1 shadow-lg ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                >
+                  {props.menuItems.map((item) => (
+                    <MenuItem key={item.name}>
+                      {item.name === 'Deslogar' ? (
+                        <button
+                          type="submit"
+                          className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                        >
+                          {item.name}
+                        </button>
+                      ) : (
+                        <a
+                          href={item.href}
+                          className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                        >
+                          {item.name}
+                        </a>
+                      )}
+                    </MenuItem>
+                  ))}
+                </MenuItems>
+              </form>
             </Menu>
           )}
           {!session?.user && (

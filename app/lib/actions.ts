@@ -2,7 +2,7 @@
 
 import { OWNER_INFOS } from './constants';
 import { redirect } from 'next/navigation'
-import { signIn } from '@/auth';
+import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
 
 export async function createWhatsAppLink(phoneNumber: string, message: string) {
@@ -50,6 +50,22 @@ export async function authenticate(
             switch (error.type) {
                 case 'CredentialsSignin':
                     return 'Invalid credentials.';
+                default:
+                    return 'Something went wrong.';
+            }
+        }
+        throw error;
+    }
+}
+export async function unauthenticate(
+    prevState: string | undefined,
+    formData: FormData,
+) {
+    try {
+        await signOut();
+    } catch (error) {
+        if (error instanceof AuthError) {
+            switch (error.type) {
                 default:
                     return 'Something went wrong.';
             }
