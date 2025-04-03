@@ -48,3 +48,6 @@ next-env.d.ts
 
 # vs code
 .vscode/
+
+# local design files
+.design/
