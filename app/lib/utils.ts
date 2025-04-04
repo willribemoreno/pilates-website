@@ -30,7 +30,6 @@ export const generateYAxis = (revenue: Revenue[]) => {
 
   for (let i = highestRecord; i >= 0; i -= 100) {
     // yAxisLabels.push(`$${i / 1000}K`);
-    console.log(i);
     yAxisLabels.push(`R$${i}`);
   }
 

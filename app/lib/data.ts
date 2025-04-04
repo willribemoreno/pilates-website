@@ -173,8 +173,21 @@ export async function fetchCustomers() {
   try {
     const customers = await sql<CustomerField[]>`
       SELECT
-        id,
-        name
+        id, 
+        image_url, 
+        name, 
+        birthDate, 
+        age, 
+        email, 
+        phone, 
+        exams, 
+        initialWeight, 
+        currentWeight, 
+        enrollmentDate, 
+        relationshipDuration, 
+        treatmentType, 
+        restrictions, 
+        avatar
       FROM customers
       ORDER BY name ASC
     `;

@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { UpdateInvoice, DeleteInvoice } from '@/app/ui/manage/patients/buttons';
 import InvoiceStatus from '@/app/ui/manage/patients/status';
 import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
-import { fetchFilteredInvoices } from '@/app/lib/data';
+import { fetchCustomers, fetchFilteredInvoices } from '@/app/lib/data';
 
 export default async function InvoicesTable({
   query,
@@ -12,6 +12,7 @@ export default async function InvoicesTable({
   currentPage: number;
 }) {
   const invoices = await fetchFilteredInvoices(query, currentPage);
+  const customers = await fetchCustomers();
 
   return (
     <div className="mt-6 flow-root">
@@ -38,7 +39,7 @@ export default async function InvoicesTable({
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
-                    <p className="text-xl font-medium">{formatCurrency(invoice.amount)}</p>
+                    <p className="text-xl">{formatCurrency(invoice.amount)}</p>
                     <p>{formatDateToLocal(invoice.date)}</p>
                   </div>
                   <div className="flex justify-end gap-2">
@@ -52,75 +53,87 @@ export default async function InvoicesTable({
           <table className="hidden min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
-                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                <th scope="col" className="font-bold px-4 py-5 sm:pl-6">
                   Nome
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="font-bold px-3 py-5">
                   Data de Nascimento
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="font-bold px-3 py-5">
                   Idade
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="font-bold px-3 py-5">
                   Telefone
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="font-bold px-3 py-5">
                   E-mail
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="font-bold px-3 py-5">
                   Exames
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="font-bold px-3 py-5">
                   Peso Inicial
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="font-bold px-3 py-5">
                   Peso Atual
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="font-bold px-3 py-5">
                   Data de Inscrição
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="font-bold px-3 py-5">
                   Tempo de Relacionamento
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="font-bold px-3 py-5">
                   Tipo de Tratamento
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="font-bold px-3 py-5">
                   Restrições
                 </th>
-                <th scope="col" className="relative py-3 pl-6 pr-3">
+                <th scope="col" className="font-bold relative py-3 pl-6 pr-3">
                   <span className="sr-only">Edit</span>
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white">
-              {invoices?.map((invoice) => (
+              {customers?.map((customer) => (
                 <tr
-                  key={invoice.id}
+                  key={customer.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       <Image
-                        src={invoice.image_url}
+                        src={customer.image_url}
                         className="rounded-full"
                         width={28}
                         height={28}
-                        alt={`${invoice.name}'s profile picture`}
+                        alt={`${customer.name}'s profile picture`}
                       />
-                      <p>{invoice.name}</p>
+                      <p>{customer.name}</p>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">{invoice.email}</td>
-                  <td className="whitespace-nowrap px-3 py-3">{formatCurrency(invoice.amount)}</td>
-                  <td className="whitespace-nowrap px-3 py-3">{formatDateToLocal(invoice.date)}</td>
                   <td className="whitespace-nowrap px-3 py-3">
-                    <InvoiceStatus status={invoice.status} />
+                    {new Date(customer.birthdate).toLocaleDateString('pt-BR')}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">{customer.age}</td>
+                  <td className="whitespace-nowrap px-3 py-3">{customer.email}</td>
+                  <td className="whitespace-nowrap px-3 py-3">{customer.phone}</td>
+                  <td className="whitespace-nowrap px-3 py-3">{customer.exams}</td>
+                  <td className="whitespace-nowrap px-3 py-3">{customer.initialweight}</td>
+                  <td className="whitespace-nowrap px-3 py-3">{customer.currentweight}</td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    {new Date(customer.enrollmentdate).toLocaleDateString('pt-BR')}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">{customer.relationshipduration}</td>
+                  <td className="whitespace-nowrap px-3 py-3">{customer.treatmenttype}</td>
+                  <td className="whitespace-nowrap px-3 py-3">{customer.restrictions}</td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    <InvoiceStatus status="Status" />
                   </td>
                   <td className="whitespace-nowrap py-3 pl-6 pr-3">
                     <div className="flex justify-end gap-3">
-                      <UpdateInvoice id={invoice.id} />
-                      <DeleteInvoice id={invoice.id} />
+                      <UpdateInvoice id="Updated" />
+                      <DeleteInvoice id="Deleted" />
                     </div>
                   </td>
                 </tr>

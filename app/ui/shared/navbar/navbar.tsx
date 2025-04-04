@@ -30,7 +30,6 @@ export default function Navbar(props: {
         const res = await fetch('/api/auth/session');
         const data = await res.json();
         setSession(data);
-        console.log(data);
       } catch (error) {
         console.error('Erro ao buscar a sessão:', error);
       }

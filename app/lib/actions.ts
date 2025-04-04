@@ -29,7 +29,6 @@ export async function createCustomWhatsAppLink(data: FormData) {
 }
 
 export async function redirectToWhatsApp(prevState: State, data: FormData): Promise<string | null> {
-    console.log(prevState);
     const url = await createCustomWhatsAppLink(data);
 
     if (url) {
