@@ -100,17 +100,24 @@ export async function fetchFilteredInvoices(
         invoices.amount,
         invoices.date,
         invoices.status,
+        customers.id,
+        customers.image_url,
         customers.name,
-        customers.email,
-        customers.image_url
+        customers.birthdate, 
+        customers.age, 
+        customers.email, 
+        customers.phone, 
+        customers.exams, 
+        customers.initialweight, 
+        customers.currentweight, 
+        customers.enrollmentdate, 
+        customers.relationshipduration, 
+        customers.treatmenttype, 
+        customers.restrictions
       FROM invoices
       JOIN customers ON invoices.customer_id = customers.id
       WHERE
-        customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`} OR
-        invoices.amount::text ILIKE ${`%${query}%`} OR
-        invoices.date::text ILIKE ${`%${query}%`} OR
-        invoices.status ILIKE ${`%${query}%`}
+        customers.name ILIKE ${`%${query}%`}
       ORDER BY invoices.date DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
@@ -169,61 +176,58 @@ export async function fetchInvoiceById(id: string) {
   }
 }
 
-export async function fetchCustomers() {
+export async function fetchCustomers(query: string) {
   try {
-    const customers = await sql<CustomerField[]>`
-      SELECT
-        id, 
-        image_url, 
-        name, 
-        birthDate, 
-        age, 
-        email, 
-        phone, 
-        exams, 
-        initialWeight, 
-        currentWeight, 
-        enrollmentDate, 
-        relationshipDuration, 
-        treatmentType, 
-        restrictions, 
-        avatar
+    const data = await sql`
+      SELECT COUNT(*)
       FROM customers
-      ORDER BY name ASC
+      WHERE
+        customers.name ILIKE ${`%${query}%`} OR
+        customers.birthdate::text ILIKE ${`%${query}%`} OR
+        customers.age::text ILIKE ${`%${query}%`} OR
+        customers.email ILIKE ${`%${query}%`} OR
+        customers.phone::text ILIKE ${`%${query}%`} OR
+        customers.exams ILIKE ${`%${query}%`} OR
+        customers.initialweight::text ILIKE ${`%${query}%`} OR
+        customers.currentweight::text ILIKE ${`%${query}%`} OR
+        customers.enrollmentdate::text ILIKE ${`%${query}%`} OR
+        customers.relationshipduration ILIKE ${`%${query}%`} OR
+        customers.treatmenttype ILIKE ${`%${query}%`} OR
+        customers.restrictions ILIKE ${`%${query}%`}
     `;
 
-    return customers;
+    const totalPages = Math.ceil(Number(data[0].count) / ITEMS_PER_PAGE);
+    return totalPages;
   } catch (err) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch all customers.');
   }
 }
 
-export async function fetchFilteredCustomers(query: string) {
+export async function fetchFilteredCustomers(query: string,
+  currentPage: number,
+) {
   try {
-    const data = await sql<CustomersTableType[]>`
-		SELECT
-		  customers.id,
-		  customers.name,
-		  customers.email,
-		  customers.image_url,
-		  COUNT(invoices.id) AS total_invoices,
-		  SUM(CASE WHEN invoices.status = 'pendente' THEN invoices.amount ELSE 0 END) AS total_pending,
-		  SUM(CASE WHEN invoices.status = 'pago' THEN invoices.amount ELSE 0 END) AS total_paid
-		FROM customers
-		LEFT JOIN invoices ON customers.id = invoices.customer_id
-		WHERE
-		  customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`}
-		GROUP BY customers.id, customers.name, customers.email, customers.image_url
-		ORDER BY customers.name ASC
+    const offset = (currentPage - 1) * ITEMS_PER_PAGE;
+    const customers = await sql<CustomersTableType[]>`
+		SELECT *
+    FROM customers
+    WHERE
+      customers.name ILIKE ${`%${query}%`} OR
+      customers.birthdate::text ILIKE ${`%${query}%`} OR
+      customers.age::text ILIKE ${`%${query}%`} OR
+      customers.email ILIKE ${`%${query}%`} OR
+      customers.phone::text ILIKE ${`%${query}%`} OR
+      customers.exams ILIKE ${`%${query}%`} OR
+      customers.initialweight::text ILIKE ${`%${query}%`} OR
+      customers.currentweight::text ILIKE ${`%${query}%`} OR
+      customers.enrollmentdate::text ILIKE ${`%${query}%`} OR
+      customers.relationshipduration ILIKE ${`%${query}%`} OR
+      customers.treatmenttype ILIKE ${`%${query}%`} OR
+      customers.restrictions ILIKE ${`%${query}%`}
+    ORDER BY customers.name DESC
+    LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
 	  `;
-
-    const customers = data.map((customer) => ({
-      ...customer,
-      total_pending: formatCurrency(customer.total_pending),
-      total_paid: formatCurrency(customer.total_paid),
-    }));
 
     return customers;
   } catch (err) {

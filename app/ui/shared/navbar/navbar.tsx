@@ -39,15 +39,31 @@ export default function Navbar(props: {
   }, []);
 
   function getNameInitials(fullName: string | null | undefined) {
-    if (fullName) {
-      const firstName = fullName.split(' ')[0];
-      const LastName = fullName.split(' ')[1];
-      const firstNameLetter = firstName[0];
-      const lastNameLetter = LastName[0];
+    if (!fullName) return ''; // Handle undefined or null values
 
-      return `${firstNameLetter}${lastNameLetter}`;
+    const nameParts = fullName.split(' ');
+
+    console.log('Name parts:', nameParts); // Debugging line
+    console.log('Full name:', fullName); // Debugging line
+    console.log('Session:', JSON.stringify(session)); // Debugging line
+    console.log('session user:', session?.user); // Debugging line
+
+    let firstNameLetter = nameParts[0] ? nameParts[0][0] : '';
+    const lastNameLetter = nameParts[1] ? nameParts[1][0] : '';
+
+    if (lastNameLetter === undefined || lastNameLetter === '') {
+      const firstNameLSize = nameParts[0].length;
+
+      if (firstNameLSize >= 3) {
+        firstNameLetter = nameParts[0]?.slice(0, 3);
+      } else {
+        firstNameLetter = nameParts[0];
+      }
     }
+
+    return `${firstNameLetter}${lastNameLetter}`;
   }
+
   return (
     <Disclosure as="nav" className="bg-white fixed z-10 w-full rounded-sm">
       <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">

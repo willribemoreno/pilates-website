@@ -68,12 +68,20 @@ export type InvoicesTable = {
 
 export type CustomersTableType = {
   id: string;
-  name: string;
-  email: string;
   image_url: string;
-  total_invoices: number;
-  total_pending: number;
-  total_paid: number;
+  name: string;
+  birthdate: string;
+  age: number;
+  phone: number;
+  exams: string;
+  initialweight: number;
+  currentweight: number;
+  enrollmentdate: string;
+  relationshipduration: string;
+  treatmenttype: string;
+  restrictions: string;
+  avatar: string;
+  email: string;
 };
 
 export type FormattedCustomersTable = {
@@ -96,7 +104,7 @@ export type CustomerField = {
   exams: string;
   initialweight: number;
   currentweight: number;
-  enrollmentdate: Date;
+  enrollmentdate: string;
   relationshipduration: string;
   treatmenttype: string;
   restrictions: string;
