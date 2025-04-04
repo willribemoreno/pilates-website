@@ -1,7 +1,5 @@
-import Navbar from '@/app/ui/shared/navbar/navbar';
 import Footer from '@/app/ui/home/footer';
 import SideNav from '@/app/ui/manage/sidenav';
-import { signOut } from '@/auth';
 
 const footerProps = {
   rights: '2025 Pilates Studio. Todos os direitos reservados.',
