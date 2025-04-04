@@ -1,7 +1,7 @@
 'use client';
 
 import SideNav from '@/app/ui/manage/sidenav';
-import Table from '@/app/ui/manage/table';
+import Table from '@/app/ui/manage/patients/table';
 
 export default function Patients() {
   return (
