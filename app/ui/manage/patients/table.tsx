@@ -1,377 +1,133 @@
-'use client';
-
-import { useState } from 'react';
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  getFilteredRowModel,
-  flexRender,
-} from '@tanstack/react-table';
 import Image from 'next/image';
-import { SortingState } from '@tanstack/react-table';
-import Link from 'next/link';
+import { UpdateInvoice, DeleteInvoice } from '@/app/ui/manage/patients/buttons';
+import InvoiceStatus from '@/app/ui/manage/patients/status';
+import { formatDateToLocal, formatCurrency } from '@/app/lib/utils';
+import { fetchFilteredInvoices } from '@/app/lib/data';
 
-const columns = [
-  { accessorKey: 'name', header: 'Nome', sortable: true },
-  { accessorKey: 'dateOfBirth', header: 'Data de Nascimento', sortable: true },
-  { accessorKey: 'age', header: 'Idade', sortable: true },
-  { accessorKey: 'phone', header: 'Telefone', sortable: false },
-  { accessorKey: 'email', header: 'E-mail', sortable: false },
-  { accessorKey: 'exams', header: 'Exames', sortable: false },
-  { accessorKey: 'initialWeight', header: 'Peso Inicial', sortable: true },
-  { accessorKey: 'currentWeight', header: 'Peso Atual', sortable: true },
-  { accessorKey: 'enrollmentDate', header: 'Data de Inscrição', sortable: true },
-  { accessorKey: 'relationshipDuration', header: 'Tempo de Relacionamento', sortable: true },
-  { accessorKey: 'treatmentType', header: 'Tipo de Tratamento', sortable: true },
-  { accessorKey: 'restrictions', header: 'Restrições' },
-  {
-    accessorKey: 'actions',
-    header: 'Ações',
-    cell: ({ row }) => <button className="text-blue-500">Ver</button>,
-  },
-];
-
-const users = [
-  {
-    id: 1,
-    name: 'Maria Silva',
-    dateOfBirth: '15/03/1990',
-    age: '33',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '75.5',
-    currentWeight: '68.2',
-    enrollmentDate: '01/01/2023',
-    relationshipDuration: '12 meses',
-    treatmentType: 'Emagrecimento',
-    restrictions: 'Glúten, Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026024d',
-    email: 'maria.silva@email.com',
-  },
-  {
-    id: 2,
-    name: 'João Santos',
-    dateOfBirth: '22/07/1985',
-    age: '38',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '92.0',
-    currentWeight: '85.5',
-    enrollmentDate: '15/03/2023',
-    relationshipDuration: '9 meses',
-    treatmentType: 'Hipertrofia',
-    restrictions: 'Nenhuma',
-    avatar: 'https://i.pravatar.cc/150?u=a042581f4e29026704d',
-    email: 'joao.santos@email.com',
-  },
-  {
-    id: 3,
-    name: 'Ana Oliveira',
-    dateOfBirth: '10/11/1995',
-    age: '28',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '65.0',
-    currentWeight: '63.8',
-    enrollmentDate: '01/06/2023',
-    relationshipDuration: '6 meses',
-    treatmentType: 'Manutenção',
-    restrictions: 'Frutos do Mar',
-    avatar: 'https://i.pravatar.cc/150?u=a04258114e29026702d',
-    email: 'ana.oliveira@email.com',
-  },
-  {
-    id: 4,
-    name: 'Carlos Ferreira',
-    dateOfBirth: '05/09/1988',
-    age: '35',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '88.3',
-    currentWeight: '82.1',
-    enrollmentDate: '01/09/2023',
-    relationshipDuration: '3 meses',
-    treatmentType: 'Emagrecimento',
-    restrictions: 'Amendoim',
-    avatar: 'https://i.pravatar.cc/150?u=a048581f4e29026701d',
-    email: 'carlos.ferreira@email.com',
-  },
-  {
-    id: 5,
-    name: 'Paula Costa',
-    dateOfBirth: '30/12/1992',
-    age: '31',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '70.2',
-    currentWeight: '65.5',
-    enrollmentDate: '15/10/2023',
-    relationshipDuration: '2 meses',
-    treatmentType: 'Reeducação Alimentar',
-    restrictions: 'Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'paula.costa@email.com',
-  },
-  {
-    id: 6,
-    name: 'Paula Costa',
-    dateOfBirth: '30/12/1992',
-    age: '31',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '70.2',
-    currentWeight: '65.5',
-    enrollmentDate: '15/10/2023',
-    relationshipDuration: '2 meses',
-    treatmentType: 'Reeducação Alimentar',
-    restrictions: 'Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'paula.costa@email.com',
-  },
-  {
-    id: 7,
-    name: 'Paula Costa',
-    dateOfBirth: '30/12/1992',
-    age: '31',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '70.2',
-    currentWeight: '65.5',
-    enrollmentDate: '15/10/2023',
-    relationshipDuration: '2 meses',
-    treatmentType: 'Reeducação Alimentar',
-    restrictions: 'Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'paula.costa@email.com',
-  },
-  {
-    id: 8,
-    name: 'Paula Costa',
-    dateOfBirth: '30/12/1992',
-    age: '31',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '70.2',
-    currentWeight: '65.5',
-    enrollmentDate: '15/10/2023',
-    relationshipDuration: '2 meses',
-    treatmentType: 'Reeducação Alimentar',
-    restrictions: 'Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'paula.costa@email.com',
-  },
-  {
-    id: 9,
-    name: 'Paula Costa',
-    dateOfBirth: '30/12/1992',
-    age: '31',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '70.2',
-    currentWeight: '65.5',
-    enrollmentDate: '15/10/2023',
-    relationshipDuration: '2 meses',
-    treatmentType: 'Reeducação Alimentar',
-    restrictions: 'Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'paula.costa@email.com',
-  },
-  {
-    id: 10,
-    name: 'Paula Costa',
-    dateOfBirth: '30/12/1992',
-    age: '31',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '70.2',
-    currentWeight: '65.5',
-    enrollmentDate: '15/10/2023',
-    relationshipDuration: '2 meses',
-    treatmentType: 'Reeducação Alimentar',
-    restrictions: 'Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'paula.costa@email.com',
-  },
-  {
-    id: 11,
-    name: 'Paula Costa',
-    dateOfBirth: '30/12/1992',
-    age: '31',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '70.2',
-    currentWeight: '65.5',
-    enrollmentDate: '15/10/2023',
-    relationshipDuration: '2 meses',
-    treatmentType: 'Reeducação Alimentar',
-    restrictions: 'Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'paula.costa@email.com',
-  },
-  {
-    id: 12,
-    name: 'Paula Costa',
-    dateOfBirth: '30/12/1992',
-    age: '31',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '70.2',
-    currentWeight: '65.5',
-    enrollmentDate: '15/10/2023',
-    relationshipDuration: '2 meses',
-    treatmentType: 'Reeducação Alimentar',
-    restrictions: 'Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'paula.costa@email.com',
-  },
-  {
-    id: 13,
-    name: 'Paula Costa',
-    dateOfBirth: '30/12/1992',
-    age: '31',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '70.2',
-    currentWeight: '65.5',
-    enrollmentDate: '15/10/2023',
-    relationshipDuration: '2 meses',
-    treatmentType: 'Reeducação Alimentar',
-    restrictions: 'Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'paula.costa@email.com',
-  },
-  {
-    id: 14,
-    name: 'Paula Costa',
-    dateOfBirth: '30/12/1992',
-    age: '31',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '70.2',
-    currentWeight: '65.5',
-    enrollmentDate: '15/10/2023',
-    relationshipDuration: '2 meses',
-    treatmentType: 'Reeducação Alimentar',
-    restrictions: 'Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'paula.costa@email.com',
-  },
-  {
-    id: 15,
-    name: 'Paula Costa',
-    dateOfBirth: '30/12/1992',
-    age: '31',
-    phone: '(19) 99999-9999',
-    exams: 'Button',
-    initialWeight: '70.2',
-    currentWeight: '65.5',
-    enrollmentDate: '15/10/2023',
-    relationshipDuration: '2 meses',
-    treatmentType: 'Reeducação Alimentar',
-    restrictions: 'Lactose',
-    avatar: 'https://i.pravatar.cc/150?u=a092581d4ef9026700d',
-    email: 'paula.costa@email.com',
-  },
-];
-
-export default function UserTable() {
-  const [globalFilter, setGlobalFilter] = useState('');
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
-
-  const table = useReactTable({
-    data: users,
-    columns,
-    state: {
-      globalFilter,
-      sorting,
-      pagination: { pageIndex, pageSize },
-    },
-    getCoreRowModel: getCoreRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    onGlobalFilterChange: setGlobalFilter,
-    onPaginationChange: (updater) => {
-      const newPagination =
-        typeof updater === 'function' ? updater({ pageIndex, pageSize }) : updater;
-      setPageIndex(newPagination.pageIndex);
-      setPageSize(newPagination.pageSize);
-    },
-  });
+export default async function InvoicesTable({
+  query,
+  currentPage,
+}: {
+  query: string;
+  currentPage: number;
+}) {
+  const invoices = await fetchFilteredInvoices(query, currentPage);
 
   return (
-    <div className="w-full h-min-screen">
-      <div className="flex items-center justify-between mt-4">
-        <input
-          className="w-1/3 p-2 mb-4 border border-gray-300 rounded-md"
-          type="text"
-          placeholder="Buscar..."
-          value={globalFilter}
-          onChange={(e) => setGlobalFilter(e.target.value)}
-        />
-        <Link
-          className="flex justify-end px-3 py-1 text-white bg-blue-500 rounded-md disabled:opacity-50"
-          href="/manage/patients/add-new-patient"
-        >
-          Adicionar Paciente
-        </Link>
-      </div>
-      <table className="w-full bg-white border border-gray-200 rounded-md shadow-sm">
-        <thead className="bg-gray-200">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  className="p-2 text-left cursor-pointer hover:bg-gray-300"
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  {flexRender(header.column.columnDef.header, header.getContext())}
-                  {header.column.getIsSorted() === 'asc'
-                    ? ' 🔼'
-                    : header.column.getIsSorted() === 'desc'
-                      ? ' 🔽'
-                      : ''}
+    <div className="mt-6 flow-root">
+      <div className="inline-block min-w-full align-middle">
+        <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
+          <div className="md:hidden">
+            {invoices?.map((invoice) => (
+              <div key={invoice.id} className="mb-2 w-full rounded-md bg-white p-4">
+                <div className="flex items-center justify-between border-b pb-4">
+                  <div>
+                    <div className="mb-2 flex items-center">
+                      <Image
+                        src={invoice.image_url}
+                        className="mr-2 rounded-full"
+                        width={28}
+                        height={28}
+                        alt={`${invoice.name}'s profile picture`}
+                      />
+                      <p>{invoice.name}</p>
+                    </div>
+                    <p className="text-sm text-gray-500">{invoice.email}</p>
+                  </div>
+                  <InvoiceStatus status={invoice.status} />
+                </div>
+                <div className="flex w-full items-center justify-between pt-4">
+                  <div>
+                    <p className="text-xl font-medium">{formatCurrency(invoice.amount)}</p>
+                    <p>{formatDateToLocal(invoice.date)}</p>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <UpdateInvoice id={invoice.id} />
+                    <DeleteInvoice id={invoice.id} />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          <table className="hidden min-w-full text-gray-900 md:table">
+            <thead className="rounded-lg text-left text-sm font-normal">
+              <tr>
+                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                  Nome
                 </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Data de Nascimento
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Idade
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Telefone
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  E-mail
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Exames
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Peso Inicial
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Peso Atual
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Data de Inscrição
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Tempo de Relacionamento
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Tipo de Tratamento
+                </th>
+                <th scope="col" className="px-3 py-5 font-medium">
+                  Restrições
+                </th>
+                <th scope="col" className="relative py-3 pl-6 pr-3">
+                  <span className="sr-only">Edit</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white">
+              {invoices?.map((invoice) => (
+                <tr
+                  key={invoice.id}
+                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                >
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src={invoice.image_url}
+                        className="rounded-full"
+                        width={28}
+                        height={28}
+                        alt={`${invoice.name}'s profile picture`}
+                      />
+                      <p>{invoice.name}</p>
+                    </div>
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-3">{invoice.email}</td>
+                  <td className="whitespace-nowrap px-3 py-3">{formatCurrency(invoice.amount)}</td>
+                  <td className="whitespace-nowrap px-3 py-3">{formatDateToLocal(invoice.date)}</td>
+                  <td className="whitespace-nowrap px-3 py-3">
+                    <InvoiceStatus status={invoice.status} />
+                  </td>
+                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                    <div className="flex justify-end gap-3">
+                      <UpdateInvoice id={invoice.id} />
+                      <DeleteInvoice id={invoice.id} />
+                    </div>
+                  </td>
+                </tr>
               ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id} className="border-b hover:bg-gray-100">
-              {row.getVisibleCells().map((cell) => (
-                <td key={cell.id} className="p-2">
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="flex items-center justify-between p-2 mt-4">
-        <button
-          className="px-3 py-1 text-white bg-blue-500 rounded-md disabled:opacity-50"
-          onClick={() => table.setPageIndex(pageIndex - 1)}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Anterior
-        </button>
-        <span>
-          Página {pageIndex + 1} de {table.getPageCount()}
-        </span>
-        <button
-          className="px-3 py-1 text-white bg-blue-500 rounded-md disabled:opacity-50"
-          onClick={() => table.setPageIndex(pageIndex + 1)}
-          disabled={!table.getCanNextPage()}
-        >
-          Próximo
-        </button>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

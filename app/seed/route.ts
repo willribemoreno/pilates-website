@@ -61,17 +61,59 @@ async function seedCustomers() {
   await sql`
     CREATE TABLE IF NOT EXISTS customers (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
+      image_url VARCHAR(255) NOT NULL,
+      name VARCHAR(255) NOT NULL,      
+      birthDate DATE NOT NULL,
+      age INT NOT NULL,
       email VARCHAR(255) NOT NULL,
-      image_url VARCHAR(255) NOT NULL
+      phone VARCHAR(15) NOT NULL,
+      exams VARCHAR(15) NOT NULL,
+      initialWeight DECIMAL(5,2) NOT NULL,
+      currentWeight DECIMAL(5,2) NOT NULL,
+      enrollmentDate DATE NOT NULL,
+      relationshipDuration VARCHAR(50) NOT NULL,
+      treatmentType VARCHAR(100) NOT NULL,
+      restrictions VARCHAR(100) NOT NULL,
+      avatar VARCHAR(255) NOT NULL
     );
   `;
 
   const insertedCustomers = await Promise.all(
     customers.map(
       (customer) => sql`
-        INSERT INTO customers (id, name, email, image_url)
-        VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.image_url})
+        INSERT INTO customers (
+        id, 
+        image_url, 
+        name, 
+        birthDate, 
+        age, 
+        email, 
+        phone, 
+        exams, 
+        initialWeight, 
+        currentWeight, 
+        enrollmentDate, 
+        relationshipDuration, 
+        treatmentType, 
+        restrictions, 
+        avatar
+        )
+        VALUES (
+        ${customer.id}, 
+        ${customer.image_url}, 
+        ${customer.name}, 
+        ${customer.birthDate}, 
+        ${customer.age}, 
+        ${customer.email}, 
+        ${customer.phone}, 
+        ${customer.exams}, 
+        ${customer.initialWeight}, 
+        ${customer.currentWeight}, 
+        ${customer.enrollmentDate}, 
+        ${customer.relationshipDuration}, 
+        ${customer.treatmentType}, 
+        ${customer.restrictions}, 
+        ${customer.avatar})
         ON CONFLICT (id) DO NOTHING;
       `,
     ),

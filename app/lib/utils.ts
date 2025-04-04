@@ -1,7 +1,7 @@
 import { Revenue } from './definitions';
 
 export const formatCurrency = (amount: number) => {
-  return (amount / 100).toLocaleString('pt-BR', {
+  return (amount).toLocaleString('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   });
@@ -28,8 +28,9 @@ export const generateYAxis = (revenue: Revenue[]) => {
   const highestRecord = Math.max(...revenue.map((month) => month.revenue));
   // const topLabel = Math.ceil(highestRecord / 1000) * 1000;
 
-  for (let i = highestRecord; i >= 0; i -= 1000) {
+  for (let i = highestRecord; i >= 0; i -= 100) {
     // yAxisLabels.push(`$${i / 1000}K`);
+    console.log(i);
     yAxisLabels.push(`R$${i}`);
   }
 

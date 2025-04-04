@@ -4,6 +4,7 @@ import { OWNER_INFOS } from './constants';
 import { redirect } from 'next/navigation'
 import { signIn, signOut } from '@/auth';
 import { AuthError } from 'next-auth';
+import { revalidatePath } from 'next/cache';
 
 export async function createWhatsAppLink(phoneNumber: string, message: string) {
     const baseUrl = 'https://whatsa.me/';
@@ -74,3 +75,12 @@ export async function unauthenticate(
     }
 }
 
+
+export async function deleteInvoice(id: string) {
+    try {
+        await sql`DELETE FROM invoices WHERE id = ${id}`;
+    } catch (error) {
+        console.log(error);
+    }
+    revalidatePath('/dashboard/invoices');
+}
