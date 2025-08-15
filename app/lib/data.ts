@@ -8,6 +8,7 @@ import {
   Revenue,
 } from './definitions';
 import { formatCurrency } from './utils';
+import { FormData } from '../manage/patients/create/page';
 
 const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
@@ -228,6 +229,45 @@ export async function fetchFilteredCustomers(query: string,
     ORDER BY customers.name DESC
     LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
 	  `;
+
+    return customers;
+  } catch (err) {
+    console.error('Database Error:', err);
+    throw new Error('Failed to fetch customer table.');
+  }
+}
+
+export async function fetchNewCustomer(data: FormData) {
+  try {
+    const actualDate = new Date();
+    const formattedDate = actualDate.toLocaleDateString('pt-BR').toString();
+    const customers = await sql<CustomersTableType[]>`
+      INSERT INTO customers (
+        name,
+        birthDate,
+        age,
+        email,
+        phone,
+        initialWeight,
+        restrictions,
+        enrollmentDate,
+        treatmentType,
+        notes
+      )
+      VALUES (
+        ${data.name},
+        ${data.birthDate},
+        ${data.age},
+        ${data.mail},
+        ${data.phone},
+        ${data.initialWeight},
+        ${data.restrictions ?? ''},
+        ${formattedDate},
+        ${data.treatmentType},
+        ${data.notes ?? ''}
+      )
+      RETURNING *
+    `;
 
     return customers;
   } catch (err) {

@@ -73,12 +73,12 @@ export type CustomersTableType = {
   birthdate: string;
   age: number;
   phone: number;
-  exams: string;
+  exams: string | null;
   initialweight: number;
   currentweight: number;
   enrollmentdate: string;
-  relationshipduration: string;
-  treatmenttype: string;
+  relationshipduration: string | null;
+  treatmenttype: string | null;
   restrictions: string;
   avatar: string;
   email: string;

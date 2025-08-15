@@ -1,0 +1,31 @@
+INSERT INTO new_customers (
+  id,
+  first_name,
+  last_name,
+  birth_date,
+  profession,
+  legal_guardian_name,
+  email,
+  phone,
+  street,
+  number,
+  district,
+  city,
+  state,
+  enrollment_date
+) VALUES (
+  uuid_generate_v4(),
+  'Lucas',
+  'Silva',
+  '2005-09-14',
+  'Estudante',
+  'Fernanda Silva',
+  'lucas.silva@example.com',
+  '(11) 91234-5678',
+  'Rua das Flores',
+  123,
+  'Centro',
+  'São Paulo',
+  'SP',
+  '2024-03-15'
+);
